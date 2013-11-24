@@ -21,7 +21,7 @@ class GithubPayload(object):
 
     @locked_cached_property
     def username(self):
-        pieces = self._parse_url(self.payload['repository']['url'])
+        pieces = self._parse_url(self.repository_url)
         return pieces['username']
 
     @locked_cached_property
@@ -32,3 +32,7 @@ class GithubPayload(object):
     @locked_cached_property
     def repository_path(self):
         return os.path.join(self.username, self.repository_name) + '.git'
+
+    @locked_cached_property
+    def repository_url(self):
+        return self.payload['repository']['url']

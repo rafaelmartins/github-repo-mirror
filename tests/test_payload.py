@@ -25,6 +25,11 @@ class GithubPayloadTestCase(unittest.TestCase):
         self.assertEqual(payload.repository_path,
                          os.path.join('octokitty', 'testing.git'))
 
+    def test_repository_url(self):
+        payload = GithubPayload(self.sample_payload)
+        self.assertEqual(payload.repository_url,
+                         'https://github.com/octokitty/testing')
+
     def test_parse_url(self):
         payload = GithubPayload('{}')
         url_pieces = payload._parse_url('https://github.com/foo/bar.git')
