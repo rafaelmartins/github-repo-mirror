@@ -37,3 +37,6 @@ nosetests.xml
 
 # Wing IDE
 *.wpu
+
+# Local virtualenv
+/.venv
