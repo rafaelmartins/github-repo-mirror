@@ -40,7 +40,8 @@ def github():
     try:
         payload = GithubPayload(request.form['payload'])
         git = Git(app.config['GITHUB_REPO_ROOT'], payload)
-        git.sync_repo()
+        app.logger.info('Syncing repo: %s\n%s' % (payload.repository_path,
+                                                  git.sync_repo()))
         return 'Ok\n'
     except Exception, err:
         app.logger.error('%s: %s' % (err.__class__.__name__, str(err)))
