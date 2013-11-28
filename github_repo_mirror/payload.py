@@ -8,7 +8,7 @@ from flask.helpers import locked_cached_property
 class GithubPayload(object):
 
     _re_url = re.compile(r'^https?://github\.com/(?P<username>[^/]+)/'
-                         r'(?P<repository_name>[^/.]+)')
+                         r'(?P<repository_name>[a-zA-Z0-9\.-]+)$')
 
     def __init__(self, payload):
         self.payload = json.loads(payload)

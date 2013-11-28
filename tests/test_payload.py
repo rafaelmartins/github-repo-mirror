@@ -32,7 +32,7 @@ class GithubPayloadTestCase(unittest.TestCase):
 
     def test_parse_url(self):
         payload = GithubPayload('{}')
-        url_pieces = payload._parse_url('https://github.com/foo/bar.git')
+        url_pieces = payload._parse_url('https://github.com/foo/bar.baz.lol')
         self.assertEqual(url_pieces['username'], 'foo')
-        self.assertEqual(url_pieces['repository_name'], 'bar')
+        self.assertEqual(url_pieces['repository_name'], 'bar.baz.lol')
 
