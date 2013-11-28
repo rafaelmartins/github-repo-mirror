@@ -32,7 +32,7 @@ class Git(object):
     def sync_repo(self):
         if not os.path.isdir(os.path.join(self.repo_path, 'objects')):
             if not os.path.isdir(self.repo_path):
-                os.makedirs(self.repo_path)
+                os.makedirs(self.repo_path, 0755)
             return self._call_git(['clone', '--mirror',
                                    self.payload.repository_url, '.'])
         else:
