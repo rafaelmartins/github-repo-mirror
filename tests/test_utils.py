@@ -25,3 +25,10 @@ class RequestAllowedTestCase(unittest.TestCase):
         self.assertFalse(request_allowed('192.168.0.1', '192.30.252.0/22',
                                          False))
 
+    def test_loopback(self):
+        self.assertTrue(request_allowed('127.0.0.1', '192.30.252.0/22',
+                                        True))
+
+    def test_loopback_without_debug(self):
+        self.assertFalse(request_allowed('127.0.0.1', '192.30.252.0/22',
+                                         False))
