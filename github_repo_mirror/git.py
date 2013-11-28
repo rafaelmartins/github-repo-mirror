@@ -30,11 +30,13 @@ class Git(object):
             raise RuntimeError(str(err))
 
     def sync_repo(self):
-        os.umask(022)
+        old_umask = os.umask(022)
         if not os.path.isdir(os.path.join(self.repo_path, 'objects')):
             if not os.path.isdir(self.repo_path):
                 os.makedirs(self.repo_path, 0755)
-            return self._call_git(['clone', '--mirror',
+            rv = self._call_git(['clone', '--mirror',
                                    self.payload.repository_url, '.'])
         else:
-            return self._call_git(['remote', 'update'])
+            rv = self._call_git(['remote', 'update'])
+        os.umask(old_umask)
+        return rv
