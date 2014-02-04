@@ -11,6 +11,9 @@ class GithubPayloadTestCase(unittest.TestCase):
         samples_dir = os.path.join(current_dir, 'samples')
         with open(os.path.join(samples_dir, 'sample_payload.json')) as fp:
             self.sample_payload = fp.read()
+        with open(os.path.join(samples_dir,
+                               'sample_payload_private.json')) as fp:
+            self.sample_payload_private = fp.read()
 
     def test_username(self):
         payload = GithubPayload(self.sample_payload)
@@ -29,6 +32,25 @@ class GithubPayloadTestCase(unittest.TestCase):
         payload = GithubPayload(self.sample_payload)
         self.assertEqual(payload.repository_url,
                          'https://github.com/octokitty/testing')
+
+    def test_repository_git_url(self):
+        payload = GithubPayload(self.sample_payload)
+        self.assertEqual(payload.repository_git_url,
+                         'git@github.com:octokitty/testing.git')
+
+    def test_repository_remote_url(self):
+        payload = GithubPayload(self.sample_payload)
+        self.assertEqual(payload.repository_remote_url,
+                         'https://github.com/octokitty/testing')
+
+    def test_repository_remote_url_private(self):
+        payload = GithubPayload(self.sample_payload_private)
+        self.assertEqual(payload.repository_remote_url,
+                         'git@github.com:octokitty/testing.git')
+
+    def test_private(self):
+        payload = GithubPayload(self.sample_payload)
+        self.assertFalse(payload.private)
 
     def test_parse_url(self):
         payload = GithubPayload('{}')
