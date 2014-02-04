@@ -36,7 +36,7 @@ class GitTestCase(unittest.TestCase):
         isdir.return_value = False
         git = Git('/tmp', self.payload)
         git.sync_repo()
-        makedirs.assert_called_once_with('/tmp/foo/bar.git')
+        makedirs.assert_called_once_with('/tmp/foo/bar.git', 0755)
         self.assertEqual(isdir.call_args_list,
                          [mock.call('/tmp/foo/bar.git/objects'),
                           mock.call('/tmp/foo/bar.git')])
