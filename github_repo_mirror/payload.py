@@ -36,18 +36,3 @@ class GithubPayload(object):
     @locked_cached_property
     def repository_url(self):
         return self.payload['repository']['url']
-
-    @locked_cached_property
-    def repository_git_url(self):
-        return 'git@github.com:%s/%s.git' % (self.username,
-                                             self.repository_name)
-
-    @locked_cached_property
-    def private(self):
-        return self.payload['repository']['private']
-
-    @locked_cached_property
-    def repository_remote_url(self):
-        if self.private:
-            return self.repository_git_url
-        return self.repository_url
