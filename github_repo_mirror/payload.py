@@ -38,9 +38,13 @@ class GithubPayload(object):
     def repository_url(self):
         return self.payload['repository']['url']
 
+    @locked_cached_property
+    def private(self):
+        return self.payload['repository']['private']
+
     def get_remote_url(self, username=None, password=None):
         url = 'https://'
-        if username is not None:
+        if self.private and username is not None:
             url += quote_plus(username)
             if password is not None:
                 url += ':' + quote_plus(password)
