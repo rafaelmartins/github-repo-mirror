@@ -29,14 +29,21 @@ class Git(object):
         except subprocess.CalledProcessError, err:
             raise RuntimeError(str(err))
 
-    def sync_repo(self):
+    def _set_remote(self, url):
+        try:
+            return self._call_git(['remote', 'set-url', 'origin', url])
+        except RuntimeError:
+            return self._call_git(['remote', 'add', 'origin', url])
+
+    def sync_repo(self, username=None, password=None):
         old_umask = os.umask(022)
+        url = self.payload.get_remote_url(username, password)
         if not os.path.isdir(os.path.join(self.repo_path, 'objects')):
             if not os.path.isdir(self.repo_path):
                 os.makedirs(self.repo_path, 0755)
-            rv = self._call_git(['clone', '--mirror',
-                                   self.payload.repository_url, '.'])
+            rv = self._call_git(['clone', '--mirror', url, '.'])
         else:
-            rv = self._call_git(['remote', 'update'])
+            rv = self._set_remote(url)
+            rv += self._call_git(['remote', 'update', 'origin'])
         os.umask(old_umask)
         return rv

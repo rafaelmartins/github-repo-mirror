@@ -3,6 +3,7 @@ import os
 import re
 
 from flask.helpers import locked_cached_property
+from urllib import quote_plus
 
 
 class GithubPayload(object):
@@ -26,7 +27,7 @@ class GithubPayload(object):
 
     @locked_cached_property
     def repository_name(self):
-        pieces = self._parse_url(self.payload['repository']['url'])
+        pieces = self._parse_url(self.repository_url)
         return pieces['repository_name']
 
     @locked_cached_property
@@ -36,3 +37,13 @@ class GithubPayload(object):
     @locked_cached_property
     def repository_url(self):
         return self.payload['repository']['url']
+
+    def get_remote_url(self, username=None, password=None):
+        url = 'https://'
+        if username is not None:
+            url += quote_plus(username)
+            if password is not None:
+                url += ':' + quote_plus(password)
+            url += '@'
+        url += 'github.com/%s/%s.git' % (self.username, self.repository_name)
+        return url

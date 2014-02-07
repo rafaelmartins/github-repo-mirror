@@ -15,6 +15,9 @@ class GitTestCase(unittest.TestCase):
             repository_path = 'foo/bar.git'
             repository_url = 'https://github.com/foo/bar'
 
+            def get_remote_url(self, username=None, password=None):
+                return self.repository_url
+
         self.payload = FakePayload()
 
     def test_repo_path(self):
@@ -52,4 +55,27 @@ class GitTestCase(unittest.TestCase):
         git.sync_repo()
         self.assertFalse(makedirs.called)
         isdir.assert_called_once_with('/tmp/foo/bar.git/objects')
-        _call_git.assert_called_once_with(['remote', 'update'])
+        _call_git.call_args_list = [
+            mock.call(['remote', 'set-url', 'origin',
+                       'https://github.com/foo/bar']),
+            mock.call(['remote', 'update', 'origin'])]
+
+
+    @mock.patch('github_repo_mirror.git.Git._call_git')
+    @mock.patch('github_repo_mirror.git.os.path.isdir')
+    @mock.patch('github_repo_mirror.git.os.makedirs')
+    def test_sync_repo_fetch_without_origin(self, makedirs, isdir, _call_git):
+        def _call_git_side_effect(args):
+            if 'set-url' in args:
+                raise RuntimeError('bola')
+            return ''
+        _call_git.side_effect = _call_git_side_effect
+        isdir.return_value = True
+        git = Git('/tmp', self.payload)
+        git.sync_repo()
+        self.assertFalse(makedirs.called)
+        isdir.assert_called_once_with('/tmp/foo/bar.git/objects')
+        _call_git.call_args_list = [
+            mock.call(['remote', 'set-url', 'origin',
+                       'https://github.com/foo/bar']),
+            mock.call(['remote', 'update', 'origin'])]

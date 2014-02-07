@@ -7,8 +7,10 @@ from github_repo_mirror.utils import request_allowed
 app = Flask(__name__)
 app.config.from_envvar('GITHUB_REPO_MIRROR_SETTINGS', True)
 
-app.config.setdefault('GITHUB_AUTH_USERNAME', 'test')
-app.config.setdefault('GITHUB_AUTH_PASSWORD', 'test')
+app.config.setdefault('GITHUB_HOOK_USERNAME', 'test')
+app.config.setdefault('GITHUB_HOOK_PASSWORD', 'test')
+app.config.setdefault('GITHUB_AUTH_USERNAME', None)
+app.config.setdefault('GITHUB_AUTH_PASSWORD', None)
 app.config.setdefault('GITHUB_REPO_ROOT', '/tmp')
 app.config.setdefault('GITHUB_PUBLIC_NETWORK', '192.30.252.0/22')
 
@@ -32,16 +34,18 @@ def github():
         abort(403)
     if request.authorization is None:
         return authenticate()
-    if request.authorization.username != app.config['GITHUB_AUTH_USERNAME'] or \
-       request.authorization.password != app.config['GITHUB_AUTH_PASSWORD']:
+    if request.authorization.username != app.config['GITHUB_HOOK_USERNAME'] or \
+       request.authorization.password != app.config['GITHUB_HOOK_PASSWORD']:
         return authenticate()
     if 'payload' not in request.form:
         abort(400)
     try:
         payload = GithubPayload(request.form['payload'])
         git = Git(app.config['GITHUB_REPO_ROOT'], payload)
-        app.logger.info('Syncing repo: %s\n%s' % (payload.repository_path,
-                                                  git.sync_repo()))
+        app.logger.info('Syncing repo: %s\n%s' %
+                        (payload.repository_path,
+                         git.sync_repo(app.config['GITHUB_AUTH_USERNAME'],
+                                       app.config['GITHUB_AUTH_PASSWORD'])))
         return 'Ok\n'
     except Exception, err:
         app.logger.error('%s: %s' % (err.__class__.__name__, str(err)))

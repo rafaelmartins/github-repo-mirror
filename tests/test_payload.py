@@ -36,3 +36,14 @@ class GithubPayloadTestCase(unittest.TestCase):
         self.assertEqual(url_pieces['username'], 'foo')
         self.assertEqual(url_pieces['repository_name'], 'bar.baz.lol')
 
+    def test_get_remote_url(self):
+        payload = GithubPayload(self.sample_payload)
+        self.assertEqual(payload.get_remote_url(),
+                         'https://github.com/octokitty/testing.git')
+        self.assertEqual(payload.get_remote_url('bola'),
+                         'https://bola@github.com/octokitty/testing.git')
+        self.assertEqual(payload.get_remote_url('bola', 'guda'),
+                         'https://bola:guda@github.com/octokitty/testing.git')
+        self.assertEqual(payload.get_remote_url('bola@guda', '@@'),
+                         'https://bola%40guda:%40%40@github.com/octokitty/'
+                         'testing.git')
