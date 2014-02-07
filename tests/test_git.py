@@ -55,10 +55,10 @@ class GitTestCase(unittest.TestCase):
         git.sync_repo()
         self.assertFalse(makedirs.called)
         isdir.assert_called_once_with('/tmp/foo/bar.git/objects')
-        _call_git.call_args_list = [
+        self.assertEqual(_call_git.call_args_list, [
             mock.call(['remote', 'set-url', 'origin',
                        'https://github.com/foo/bar']),
-            mock.call(['remote', 'update', 'origin'])]
+            mock.call(['remote', 'update', 'origin'])])
 
 
     @mock.patch('github_repo_mirror.git.Git._call_git')
@@ -75,7 +75,7 @@ class GitTestCase(unittest.TestCase):
         git.sync_repo()
         self.assertFalse(makedirs.called)
         isdir.assert_called_once_with('/tmp/foo/bar.git/objects')
-        _call_git.call_args_list = [
-            mock.call(['remote', 'set-url', 'origin',
-                       'https://github.com/foo/bar']),
-            mock.call(['remote', 'update', 'origin'])]
+        self.assertEqual(_call_git.call_args_list, [
+            mock.call(['remote', 'set-url', 'origin', 'https://github.com/foo/bar']),
+            mock.call(['remote', 'add', '--mirror=fetch', 'origin', 'https://github.com/foo/bar']),
+            mock.call(['remote', 'update', 'origin'])])

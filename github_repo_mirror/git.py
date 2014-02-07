@@ -33,7 +33,8 @@ class Git(object):
         try:
             return self._call_git(['remote', 'set-url', 'origin', url])
         except RuntimeError:
-            return self._call_git(['remote', 'add', 'origin', url])
+            return self._call_git(['remote', 'add', '--mirror=fetch',
+                                   'origin', url])
 
     def sync_repo(self, username=None, password=None):
         old_umask = os.umask(022)
