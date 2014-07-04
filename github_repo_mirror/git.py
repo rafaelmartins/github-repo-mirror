@@ -42,9 +42,12 @@ class Git(object):
         if not os.path.isdir(os.path.join(self.repo_path, 'objects')):
             if not os.path.isdir(self.repo_path):
                 os.makedirs(self.repo_path, 0755)
-            rv = self._call_git(['clone', '--mirror', url, '.'])
+            rv = self._call_git(['clone', '--bare', url, '.'])
         else:
             rv = self._set_remote(url)
-            rv += self._call_git(['remote', 'update', 'origin'])
+            rv += self._call_git(['fetch', 'origin',
+                                  '+refs/heads/*:refs/heads/*'])
+            rv += self._call_git(['fetch', 'origin',
+                                  '+refs/tags/*:refs/tags/*'])
         os.umask(old_umask)
         return rv
