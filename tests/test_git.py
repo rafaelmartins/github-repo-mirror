@@ -43,7 +43,7 @@ class GitTestCase(unittest.TestCase):
         self.assertEqual(isdir.call_args_list,
                          [mock.call('/tmp/foo/bar.git/objects'),
                           mock.call('/tmp/foo/bar.git')])
-        _call_git.assert_called_once_with(['clone', '--mirror',
+        _call_git.assert_called_once_with(['clone', '--bare',
                                            'https://github.com/foo/bar', '.'])
 
     @mock.patch('github_repo_mirror.git.Git._call_git')
@@ -58,7 +58,8 @@ class GitTestCase(unittest.TestCase):
         self.assertEqual(_call_git.call_args_list, [
             mock.call(['remote', 'set-url', 'origin',
                        'https://github.com/foo/bar']),
-            mock.call(['remote', 'update', 'origin'])])
+            mock.call(['fetch', 'origin', '+refs/heads/*:refs/heads/*']),
+            mock.call(['fetch', 'origin', '+refs/tags/*:refs/tags/*'])])
 
 
     @mock.patch('github_repo_mirror.git.Git._call_git')
@@ -78,4 +79,5 @@ class GitTestCase(unittest.TestCase):
         self.assertEqual(_call_git.call_args_list, [
             mock.call(['remote', 'set-url', 'origin', 'https://github.com/foo/bar']),
             mock.call(['remote', 'add', '--mirror=fetch', 'origin', 'https://github.com/foo/bar']),
-            mock.call(['remote', 'update', 'origin'])])
+            mock.call(['fetch', 'origin', '+refs/heads/*:refs/heads/*']),
+            mock.call(['fetch', 'origin', '+refs/tags/*:refs/tags/*'])])
