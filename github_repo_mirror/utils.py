@@ -10,4 +10,3 @@ def request_allowed(remote_addr, allowed_network, debug=False):
         return True
     network = IPv4Network(allowed_network)
     return ip in network
-

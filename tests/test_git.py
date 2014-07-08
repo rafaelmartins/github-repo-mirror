@@ -1,6 +1,5 @@
 import mock
 import os
-import posixpath
 import subprocess
 import unittest
 
@@ -101,8 +100,10 @@ class GitTestCase(unittest.TestCase):
         self.assertFalse(makedirs.called)
         isdir.assert_called_once_with('/tmp/foo/bar.git/objects')
         self.assertEqual(_call_git.call_args_list, [
-            mock.call(['remote', 'set-url', 'origin', 'https://github.com/foo/bar']),
-            mock.call(['remote', 'add', '--mirror=fetch', 'origin', 'https://github.com/foo/bar']),
+            mock.call(['remote', 'set-url', 'origin',
+                       'https://github.com/foo/bar']),
+            mock.call(['remote', 'add', '--mirror=fetch', 'origin',
+                       'https://github.com/foo/bar']),
             mock.call(['fetch', 'origin', '+refs/heads/*:refs/heads/*']),
             mock.call(['fetch', 'origin', '+refs/tags/*:refs/tags/*'])])
         _call_hook.assert_called_once_with()

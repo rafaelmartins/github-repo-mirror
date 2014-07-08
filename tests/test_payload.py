@@ -11,7 +11,8 @@ class GithubPayloadTestCase(unittest.TestCase):
         samples_dir = os.path.join(current_dir, 'samples')
         with open(os.path.join(samples_dir, 'sample_payload.json')) as fp:
             self.sample_payload = fp.read()
-        with open(os.path.join(samples_dir, 'sample_payload_private.json')) as fp:
+        with open(os.path.join(samples_dir,
+                               'sample_payload_private.json')) as fp:
             self.sample_payload_private = fp.read()
 
     def test_username(self):
