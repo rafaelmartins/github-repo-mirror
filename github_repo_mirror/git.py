@@ -26,7 +26,7 @@ class Git(object):
             return subprocess.check_output([self.git_cmd] + args,
                                            cwd=self.repo_path,
                                            stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError, err:
+        except subprocess.CalledProcessError as err:
             raise RuntimeError(str(err))
 
     def _call_hook(self):
@@ -39,7 +39,7 @@ class Git(object):
                                                cwd=self.repo_path,
                                                shell=True,
                                                stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError, err:
+            except subprocess.CalledProcessError as err:
                 raise RuntimeError(str(err))
         return ''
 
@@ -51,12 +51,12 @@ class Git(object):
                                    'origin', url])
 
     def sync_repo(self, username=None, password=None):
-        old_umask = os.umask(022)
+        old_umask = os.umask(0o22)
         url = self.payload.get_remote_url(username, password)
         rv = ''
         if not os.path.isdir(os.path.join(self.repo_path, 'objects')):
             if not os.path.isdir(self.repo_path):
-                os.makedirs(self.repo_path, 0755)
+                os.makedirs(self.repo_path, 0o755)
             rv = self._call_git(['clone', '--bare', url, '.'])
         else:
             rv = self._set_remote(url)

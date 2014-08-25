@@ -47,6 +47,6 @@ def github():
                          git.sync_repo(app.config['GITHUB_AUTH_USERNAME'],
                                        app.config['GITHUB_AUTH_PASSWORD'])))
         return 'Ok\n'
-    except Exception, err:
+    except Exception as err:
         app.logger.error('%s: %s' % (err.__class__.__name__, str(err)))
         return 'Fail\n', 500

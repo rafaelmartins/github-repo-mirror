@@ -3,7 +3,10 @@ import os
 import re
 
 from flask.helpers import locked_cached_property
-from urllib import quote_plus
+try:
+    from urllib.parse import quote_plus
+except ImportError:
+    from urllib import quote_plus
 
 
 class GithubPayload(object):
