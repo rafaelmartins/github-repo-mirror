@@ -41,7 +41,7 @@ class Git(object):
                                                stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as err:
                 raise RuntimeError(str(err))
-        return ''
+        return b''
 
     def _set_remote(self, url):
         try:
@@ -53,7 +53,7 @@ class Git(object):
     def sync_repo(self, username=None, password=None):
         old_umask = os.umask(0o22)
         url = self.payload.get_remote_url(username, password)
-        rv = ''
+        rv = b''
         if not os.path.isdir(os.path.join(self.repo_path, 'objects')):
             if not os.path.isdir(self.repo_path):
                 os.makedirs(self.repo_path, 0o755)
