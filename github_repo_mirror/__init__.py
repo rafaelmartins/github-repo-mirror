@@ -4,6 +4,8 @@ from github_repo_mirror.git import Git
 from github_repo_mirror.payload import GithubPayload
 from github_repo_mirror.utils import request_allowed
 
+import traceback
+
 app = Flask(__name__)
 app.config.from_envvar('GITHUB_REPO_MIRROR_SETTINGS', True)
 
@@ -48,5 +50,6 @@ def github():
                                        app.config['GITHUB_AUTH_PASSWORD'])))
         return 'Ok\n'
     except Exception as err:
-        app.logger.error('%s: %s' % (err.__class__.__name__, str(err)))
+        app.logger.error('%s: %s\n%s' % (err.__class__.__name__, str(err),
+                                         traceback.format_exc()))
         return 'Fail\n', 500
