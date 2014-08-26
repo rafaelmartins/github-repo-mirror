@@ -35,7 +35,7 @@ class GithubPayload(object):
 
     @locked_cached_property
     def repository_path(self):
-        return os.path.join(self.username, self.repository_name) + '.git'
+        return '%s.git' % os.path.join(self.username, self.repository_name)
 
     @locked_cached_property
     def repository_url(self):
