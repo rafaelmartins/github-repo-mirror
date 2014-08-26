@@ -1,2 +1,1 @@
 Flask==0.10.1
-py2-ipaddress==1.0
