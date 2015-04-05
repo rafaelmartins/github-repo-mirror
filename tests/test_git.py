@@ -45,7 +45,7 @@ class GitTestCase(unittest.TestCase):
             '/tmp/foo/bar.git/hooks/github-repo-mirror', os.X_OK)
         isfile.assert_called_once_with(
             '/tmp/foo/bar.git/hooks/github-repo-mirror')
-        check_output.assert_called_once_with('./hooks/github-repo-mirror',
+        check_output.assert_called_once_with('/tmp/foo/bar.git/hooks/github-repo-mirror',
                                              shell=True,
                                              cwd='/tmp/foo/bar.git',
                                              stderr=-2)

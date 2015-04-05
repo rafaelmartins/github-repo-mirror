@@ -30,12 +30,10 @@ class Git(object):
             raise RuntimeError(str(err))
 
     def _call_hook(self):
-        hook_relative = os.path.join('hooks', 'github-repo-mirror')
-        hook = os.path.join(self.repo_path, hook_relative)
+        hook = os.path.join(self.repo_path, 'hooks', 'github-repo-mirror')
         if os.path.isfile(hook) and os.access(hook, os.X_OK):
             try:
-                return subprocess.check_output(os.path.join('.',
-                                                            hook_relative),
+                return subprocess.check_output(hook,
                                                cwd=self.repo_path,
                                                shell=True,
                                                stderr=subprocess.STDOUT)
